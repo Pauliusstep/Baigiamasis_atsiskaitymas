@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { API_URL, LOGGED_IN_USER } from "../../constants/constants";
+import { LOGGED_IN_USER } from "../../constants/constants";
 import styled from 'styled-components';
 
 const AttendeesList = styled.ul`
@@ -23,7 +23,7 @@ export const Attendees = () => {
     const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
-        fetch(`${API_URL}/attendees?userId=${LOGGED_IN_USER.id}`)
+        fetch(`${process.env.REACT_APP_API_URL}/attendees?userId=${LOGGED_IN_USER.id}`)
             .then(res => res.json())
             .then(data => {
                 setAttendees(data);
