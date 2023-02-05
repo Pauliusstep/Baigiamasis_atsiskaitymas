@@ -7,7 +7,7 @@ const AttendeesList = styled.ul`
     flex-direction: column;
     gap: 8px;
     list-style: none;
-    width: 500px;
+    width: 800px;
 `;
 
 const AttendeesListItem = styled.li`
@@ -21,6 +21,10 @@ const AttendeesListItem = styled.li`
 export const Attendees = () => {
     const [attendees, setAttendees] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
+    const [name, setName] = useState('');
+    const [surname, setSurname] = useState('');
+    const [email, setEmail] = useState('');
+    const [phone, setPhone] = useState('');
 
     useEffect(() => {
         fetch(`${process.env.REACT_APP_API_URL}/attendees?userId=${LOGGED_IN_USER.id}`)
@@ -35,14 +39,68 @@ export const Attendees = () => {
         return <div>Loading...</div>;
     }
 
+    const handleAttendeesAdd = (e) => {
+        e.preventDefault();
+        fetch(`${process.env.REACT_APP_API_URL}/attendees`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                name,
+                surname,
+                email,
+                phone,
+                userId: 1
+            })
+        })
+        .then((res) => res.json())
+        .then((data) => {
+            setAttendees(data);
+            setName('');
+            setSurname('');
+            setEmail('');
+            setPhone('');
+        })
+    }
+
+
     return (
         <AttendeesList>
+            <form onSubmit={handleAttendeesAdd}>
+                <input
+                    placeholder="Name" 
+                    required 
+                    onChange={(e) => setName(e.target.value)} 
+                    value={name}
+                />
+                <input 
+                    placeholder="Surname" 
+                    required 
+                    onChange={(e) => setSurname(e.target.value)} 
+                    value={surname}
+                />
+                <input 
+                    placeholder="Email" 
+                    type="email" 
+                    required 
+                    onChange={(e) => setEmail(e.target.value)} 
+                    value={email}
+                />
+                <input 
+                    placeholder="Phone" 
+                    required 
+                    onChange={(e) => setPhone(e.target.value)} 
+                    value={phone}
+                />
+                <button>Add</button>
+            </form>
             {attendees.map((att) => (
                 <AttendeesListItem key={att.id}>
-                    <span>Vardas: {att.name}</span>
-                    <span>Pavardė: {att.surname}</span>
-                    <span>El.paštas: {att.email}</span>
-                    <span>Tel.Nr: {att.phone}</span>
+                    <span>Name: {att.name}</span>
+                    <span>Surname: {att.surname}</span>
+                    <span>Email: {att.email}</span>
+                    <span>Phone: {att.phone}</span>
                 </AttendeesListItem>
             ))}
         </AttendeesList>
