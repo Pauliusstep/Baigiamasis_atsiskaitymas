@@ -1,20 +1,22 @@
 import { useEffect, useState } from "react"
 import { LOGGED_IN_USER } from "../../constants/constants";
 import styled from 'styled-components';
+import { Input } from "../../components/Input/Input";
+import { Button } from "../../components/Button/Button";
 
 const AttendeesList = styled.ul`
     display: flex;
     flex-direction: column;
     gap: 8px;
     list-style: none;
-    width: 800px;
+    margin-right: 40px;
 `;
 
 const AttendeesListItem = styled.li`
     border-radius: 10px;
     box-shadow: 0 5px 7px -1px rgb(51 51 51 /23%);
     display: flex;
-    justify-content: space-between;
+    align-items: flex-start;
     padding: 10px 30px 10px 30px;
 `;
 
@@ -68,32 +70,32 @@ export const Attendees = () => {
     return (
         <AttendeesList>
             <form onSubmit={handleAttendeesAdd}>
-                <input
+                <Input
                     placeholder="Name" 
                     required 
                     onChange={(e) => setName(e.target.value)} 
                     value={name}
                 />
-                <input 
+                <Input 
                     placeholder="Surname" 
                     required 
                     onChange={(e) => setSurname(e.target.value)} 
                     value={surname}
                 />
-                <input 
+                <Input 
                     placeholder="Email" 
                     type="email" 
                     required 
                     onChange={(e) => setEmail(e.target.value)} 
                     value={email}
                 />
-                <input 
+                <Input 
                     placeholder="Phone" 
                     required 
                     onChange={(e) => setPhone(e.target.value)} 
                     value={phone}
                 />
-                <button>Add</button>
+                <Button>Add</Button>
             </form>
             {attendees.map((att) => (
                 <AttendeesListItem key={att.id}>
