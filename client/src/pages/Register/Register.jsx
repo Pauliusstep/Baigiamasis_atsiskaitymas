@@ -22,6 +22,11 @@ const FormStyled = styled.form`
     justify-content: center;
 `;
 
+const ErrorStyled = styled.div`
+    color: red;
+    text-align: center;
+`;
+
 export const Register = () => {
     const navigate = useNavigate();
     const [email, setEmail] = useState('');
@@ -98,7 +103,7 @@ export const Register = () => {
                     value={password}
                     required
                 />
-                 {error && <div>{error}</div>}
+                 {error && <ErrorStyled>{error}</ErrorStyled>}
                 <Button>Register</Button>
                 <Link to="/login"> Have an account? Log in here</Link>
             </FormStyled>

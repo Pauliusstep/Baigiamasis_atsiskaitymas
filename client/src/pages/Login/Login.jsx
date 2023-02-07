@@ -27,6 +27,11 @@ const FieldsetStyled = styled.fieldset`
     margin: 0;
 `;
 
+const ErrorStyled = styled.div`
+    color: red;
+    text-align: center;
+`;
+
 export const Login = ({ onSuccess }) => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -87,7 +92,7 @@ export const Login = ({ onSuccess }) => {
                             value={password}
                             
                         />
-                        {error && <div>{error}</div>}
+                        {error && <ErrorStyled>{error}</ErrorStyled>}
                         <Button>Login</Button>
                         <Link to="/register">Don't have an account? Register here</Link>
                     </FieldsetStyled>
