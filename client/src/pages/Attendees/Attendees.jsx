@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { Input } from "../../components/Input/Input";
 import { Button } from "../../components/Button/Button";
 import { UserContext } from "../../contexts/UserContextWrapper";
+import { LOCAL_STORAGE_JWT_TOKEN_KEY } from '../../constants/constants';
 
 const AttendeesList = styled.ul`
     display: flex;
@@ -30,10 +31,16 @@ export const Attendees = () => {
     const { user } = useContext(UserContext);
 
     useEffect(() => {
-        fetch(`${process.env.REACT_APP_API_URL}/attendees?userId=${user.id}`)
+        fetch(`${process.env.REACT_APP_API_URL}/attendees?userId=${user.id}`, {
+            headers: {
+                authorization: 'Bearer ' + localStorage.getItem(LOCAL_STORAGE_JWT_TOKEN_KEY)
+            }
+        })
             .then(res => res.json())
             .then(data => {
-                setAttendees(data);
+                if (!data.error) {
+                    setAttendees(data);
+                }
                 setIsLoading(false);
             });
     }, [user.id]);
@@ -47,7 +54,8 @@ export const Attendees = () => {
         fetch(`${process.env.REACT_APP_API_URL}/attendees`, {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                authorization: 'Bearer ' + localStorage.getItem(LOCAL_STORAGE_JWT_TOKEN_KEY)
             },
             body: JSON.stringify({
                 name,
@@ -59,11 +67,13 @@ export const Attendees = () => {
         })
         .then((res) => res.json())
         .then((data) => {
-            setAttendees(data);
-            setName('');
-            setSurname('');
-            setEmail('');
-            setPhone('');
+            if (!data.error) {
+                setAttendees(data);
+                setEmail('');
+                setName('');
+                setSurname('');
+                setPhone('');
+            }
         })
     }
 
