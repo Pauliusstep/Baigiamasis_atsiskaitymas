@@ -47,18 +47,23 @@ export const Login = ({ onSuccess }) => {
             })
         })
         .then((res) => {
-            if (res.status === 200) {
-                return res.json();
+            if (res.status === 401) {
+                throw new Error('Incorrect username or password');
             }
 
-            throw new Error('Incorrect username or passsword');
+            if (!res.ok) {
+                throw new Error('Something went wrong');
+            }
+
+            return res.json();
         })
         .then((data) => {
             onSuccess(data);
             setIsLoading(false);
+            setError('');
         })
         .catch((e) => {
-            setError(String(e));
+            setError(e.message);
             setIsLoading(false);
         })
     }
@@ -67,7 +72,7 @@ export const Login = ({ onSuccess }) => {
         <LoginContainer>
             <FormStyled onSubmit={handleLogin}>
                 <h1>Events Organizer</h1>
-                    <FieldsetStyled disabled={isLoading}>
+                    <FieldsetStyled disabled={isLoading} column>
                         <Input
                             placeholder="E-mail"
                             type="email" 

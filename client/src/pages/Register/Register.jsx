@@ -16,12 +16,10 @@ const FormStyled = styled.form`
     background-color: white;
     padding: 15px;
     border-radius: 10px;
-`;
-
-const LinkStyled = styled(Link)`
-    aign-self: center;
-    color: green;
     display: flex;
+    flex-direction: column;
+    gap: 10px;
+    justify-content: center;
 `;
 
 export const Register = () => {
@@ -30,9 +28,12 @@ export const Register = () => {
     const [name, setName] = useState('');
     const [surname, setSurname] = useState('');
     const [password, setPassword] = useState('');
+    const [error, setError] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
 
     const handleRegister = (e) => {
         e.preventDefault();
+        setIsLoading(true);
         fetch(`${process.env.REACT_APP_API_URL}/register`, {
             method: 'POST', 
             headers: {
@@ -45,9 +46,25 @@ export const Register = () => {
                 password
             })
         })
-        .then((res) => res.json())
+        .then((res) => {
+            if (res.status === 400) {
+                throw new Error('User already exists');
+            }
+
+            if (!res.ok) {
+                throw new Error('Something went wrong');
+            }
+
+            return res.json();
+        })
         .then((data) => {
             navigate('/login');
+            setIsLoading(false);
+            setError('');
+        })
+        .catch((e) => {
+            setError(e.message);
+            setIsLoading(false);
         });
     };
 
@@ -81,10 +98,10 @@ export const Register = () => {
                     value={password}
                     required
                 />
+                 {error && <div>{error}</div>}
                 <Button>Register</Button>
-                <LinkStyled to="/login"> Have an account? Log in here</LinkStyled>
+                <Link to="/login"> Have an account? Log in here</Link>
             </FormStyled>
-           
         </RegisterContainer>
        
     )
