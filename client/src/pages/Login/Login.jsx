@@ -18,18 +18,24 @@ const FormStyled = styled.form`
     border-radius: 10px;
 `;
 
-const LinkStyled = styled(Link)`
-    aign-self: center;
-    color: green;
+const FieldsetStyled = styled.fieldset`
     display: flex;
+    flex-direction: column;
+    gap: 10px;
+    justify-content: center;
+    border: none;
+    margin: 0;
 `;
 
 export const Login = ({ onSuccess }) => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [error, setError] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
 
     const handleLogin = (e) => {
         e.preventDefault();
+        setIsLoading(true);
         fetch(`${process.env.REACT_APP_API_URL}/login`, {
             method: 'POST', 
             headers: {
@@ -40,35 +46,47 @@ export const Login = ({ onSuccess }) => {
                 password
             })
         })
-        .then((res) => res.json())
+        .then((res) => {
+            if (res.status === 200) {
+                return res.json();
+            }
+
+            throw new Error('Incorrect username or passsword');
+        })
         .then((data) => {
             onSuccess(data);
+            setIsLoading(false);
         })
         .catch((e) => {
-            console.log(e);
-        });
+            setError(String(e));
+            setIsLoading(false);
+        })
     }
 
     return (
         <LoginContainer>
             <FormStyled onSubmit={handleLogin}>
                 <h1>Events Organizer</h1>
-                <Input
-                    placeholder="E-mail"
-                    type="email" 
-                    onChange={(e) => setEmail(e.target.value)}
-                    value={email} 
-                    required
-                />
-                <Input 
-                    placeholder="Password" 
-                    type="password"
-                    onChange={(e) => setPassword(e.target.value)}
-                    value={password}
-                    required
-                />
-                <Button>Login</Button>
-                <LinkStyled to="/register">Don't have an account? Register here</LinkStyled>
+                    <FieldsetStyled disabled={isLoading}>
+                        <Input
+                            placeholder="E-mail"
+                            type="email" 
+                            onChange={(e) => setEmail(e.target.value)}
+                            value={email} 
+                            
+                        />
+                        <Input 
+                            placeholder="Password" 
+                            type="password"
+                            onChange={(e) => setPassword(e.target.value)}
+                            value={password}
+                            
+                        />
+                        {error && <div>{error}</div>}
+                        <Button>Login</Button>
+                        <Link to="/register">Don't have an account? Register here</Link>
+                    </FieldsetStyled>
+                
             </FormStyled>
         </ LoginContainer>
     );

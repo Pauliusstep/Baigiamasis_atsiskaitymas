@@ -8,6 +8,10 @@ const ButtonStyled = styled.button`
    background-color: green;
    color: white;
    cursor: pointer;
+
+   &:disabled {
+        opacity: 0.5;
+   }
 `;
 
 export const Button = (props) => {
