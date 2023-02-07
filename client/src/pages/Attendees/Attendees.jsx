@@ -8,18 +8,27 @@ import { LOCAL_STORAGE_JWT_TOKEN_KEY } from '../../constants/constants';
 const AttendeesList = styled.ul`
     display: flex;
     flex-direction: column;
-    gap: 8px;
-    list-style: none;
-    margin-right: 40px;
-`;
+    padding: 20px;
+`;  
 
 const AttendeesListItem = styled.li`
     border-radius: 10px;
     box-shadow: 0 5px 7px -1px rgb(51 51 51 /23%);
-    display: flex;
-    align-items: flex-start;
     padding: 10px 30px 10px 30px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: rgba(202, 252, 172, 0.8);
 `;
+
+const FormStyled = styled.form`
+    background-color: white;
+    padding: 15px;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+ `;
 
 export const Attendees = () => {
     const [attendees, setAttendees] = useState([]);
@@ -80,7 +89,7 @@ export const Attendees = () => {
 
     return (
         <AttendeesList>
-            <form onSubmit={handleAttendeesAdd}>
+            <FormStyled onSubmit={handleAttendeesAdd}>
                 <Input
                     placeholder="Name" 
                     required 
@@ -107,15 +116,16 @@ export const Attendees = () => {
                     value={phone}
                 />
                 <Button>Add</Button>
-            </form>
+           </FormStyled>
             {attendees.map((att) => (
                 <AttendeesListItem key={att.id}>
                     <span>Name: {att.name}</span>
                     <span>Surname: {att.surname}</span>
                     <span>Email: {att.email}</span>
                     <span>Phone: {att.phone}</span>
-                </AttendeesListItem>
+                </AttendeesListItem>    
             ))}
-        </AttendeesList>
+             </AttendeesList>
     );
+  
 }
