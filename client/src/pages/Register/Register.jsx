@@ -75,7 +75,7 @@ export const Register = () => {
 
     return (
         <RegisterContainer>
-            <FormStyled onSubmit={handleRegister}>
+            <FormStyled onSubmit={handleRegister} disabled={isLoading}>
                 <h1>Registration for admins</h1>
                 <Input 
                     placeholder="Your e-mail" 
