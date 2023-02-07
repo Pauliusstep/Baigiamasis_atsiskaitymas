@@ -105,6 +105,25 @@ app.post('/login', (req,res) => {
     );
 });
 
+app.delete('/attendees/:id', verifyToken, (req, res) => {
+    const { id } = req.params;
+    const { id: userId } = getUserFromToken(req);
+
+    connection.execute(
+        'DELETE FROM attendees WHERE id=? AND userId=?', 
+        [id, userId], 
+        () => {
+            connection.execute(
+                'SELECT * FROM attendees WHERE userId=?', 
+                [userId], 
+                (err, attendees) => {
+                    res.send(attendees);
+                }
+            )
+        }
+    )
+ });
+
 app.get('/token/verify', (req, res) => {
     try {
         const token = req.headers.authorization.split(' ')[1];

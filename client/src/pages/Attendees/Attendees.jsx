@@ -11,6 +11,19 @@ const AttendeesList = styled.ul`
     padding: 20px;
 `;  
 
+const HoverOverlay = styled.div`
+    background-color: rgba(0, 0, 0, 0.2);
+    content: '';
+    position: absolute;
+    height: 100%;
+    left: 0;
+    width: 100%;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    
+`;
+
 const AttendeesListItem = styled.li`
     border-radius: 10px;
     box-shadow: 0 5px 7px -1px rgb(51 51 51 /23%);
@@ -18,7 +31,18 @@ const AttendeesListItem = styled.li`
     display: flex;
     flex-direction: column;
     align-items: center;
-    background-color: rgba(202, 252, 172, 0.8);
+    position: relative;
+    overflow: hidden;
+
+    ${HoverOverlay} {
+        visibility: hidden;
+    }
+
+    &:hover {
+        ${HoverOverlay} {
+            visibility: visible
+        }
+    }
 `;
 
 const FormStyled = styled.form`
@@ -29,6 +53,13 @@ const FormStyled = styled.form`
     flex-direction: column;
     gap: 10px;
  `;
+
+const HoverOverlayContent = styled.div`
+    color: red;
+    font-size: 20px;
+    margin-left: 20px;
+    cursor: pointer;
+`;
 
 export const Attendees = () => {
     const [attendees, setAttendees] = useState([]);
@@ -86,6 +117,21 @@ export const Attendees = () => {
         })
     }
 
+    const handleDeleteAttendee = (id) => {
+        if (window.confirm('Do you really want to delete this expense?')) {
+            fetch(`${process.env.REACT_APP_API_URL}/attendees/${id}`, {
+                method: 'DELETE', 
+                headers: {
+                    authorization: 'Bearer ' + localStorage.getItem(LOCAL_STORAGE_JWT_TOKEN_KEY)
+                }
+            })
+            .then((res) => res.json())
+            .then(data => {
+                setAttendees(data);
+            });
+        }
+        }
+        
 
     return (
         <AttendeesList>
@@ -118,7 +164,10 @@ export const Attendees = () => {
                 <Button>Add</Button>
            </FormStyled>
             {attendees.map((att) => (
-                <AttendeesListItem key={att.id}>
+                <AttendeesListItem key={att.id} onClick={() => handleDeleteAttendee(att.id)}>
+                    <HoverOverlay>
+                        <HoverOverlayContent>DELETE</HoverOverlayContent>
+                    </HoverOverlay>
                     <span>Name: {att.name}</span>
                     <span>Surname: {att.surname}</span>
                     <span>Email: {att.email}</span>
