@@ -5,6 +5,7 @@ import { Attendees } from './pages/Attendees/Attendees';
 import { Login } from './pages/Login/Login';
 import { Register } from './pages/Register/Register';
 import { UserContextWrapper } from './contexts/UserContextWrapper';
+import { NotFound } from './pages/404page/404page';
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
         </Route>
         <Route path='login' element={<Login />} />
         <Route path='/register' element={<Register />} />
+        <Route path='*' element={<NotFound />} />
       </Routes>
     </UserContextWrapper>
   );
